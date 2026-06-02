@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -34,7 +34,7 @@ body{
 
 .card{
     width:90%;
-    max-width:520px;
+    max-width:560px;
 
     background:rgba(255,255,255,.12);
     backdrop-filter:blur(20px);
@@ -52,23 +52,57 @@ body{
 }
 
 .logo{
-    font-size:38px;
+    font-size:40px;
     font-weight:700;
     color:#fff;
-    margin-bottom:10px;
+    margin-bottom:20px;
 }
 
-.desc{
-    color:rgba(255,255,255,.8);
+.guide-box{
+    background:rgba(255,255,255,.08);
+    border-radius:18px;
+    padding:22px;
+    margin-bottom:28px;
+    line-height:1.9;
+}
+
+.guide-title{
+    color:#fff;
+    font-size:20px;
+    font-weight:700;
+    margin-bottom:14px;
+}
+
+.guide-text{
+    color:rgba(255,255,255,.88);
     font-size:15px;
-    line-height:1.7;
-    margin-bottom:30px;
+}
+
+.highlight{
+    color:#ffd54f;
+    font-weight:bold;
+}
+
+.example{
+    margin-top:14px;
+    color:#4ade80;
+    font-weight:bold;
+    font-size:18px;
+}
+
+.big-domain{
+    margin-top:12px;
+    color:#60a5fa;
+    font-weight:bold;
+    font-size:24px;
+    word-break:break-all;
 }
 
 .notice{
-    color:#ffd54f;
-    font-size:16px;
-    margin-bottom:25px;
+    color:#fca5a5;
+    font-size:14px;
+    margin-bottom:24px;
+    line-height:1.7;
 }
 
 .links{
@@ -135,12 +169,20 @@ body{
     }
 
     .logo{
-        font-size:30px;
+        font-size:32px;
+    }
+
+    .guide-title{
+        font-size:18px;
     }
 
     .link{
         font-size:17px;
         padding:14px;
+    }
+
+    .big-domain{
+        font-size:20px;
     }
 
 }
@@ -155,13 +197,39 @@ body{
         Muacloud
     </div>
 
-    <div class="desc">
-        欢迎访问 Muacloud 导航页<br>
-        请根据当前年月访问最新地址
+    <div class="guide-box">
+
+        <div class="guide-title">
+            域名每个月都会变化
+        </div>
+
+        <div class="guide-text">
+
+            访问规则：
+
+            <br><br>
+
+            <span class="highlight">
+                当前年月 + .域名
+            </span>
+
+            <div class="example">
+                当前时间：
+                <span id="current-date"></span>
+            </div>
+
+            <div class="big-domain">
+                <span id="example-prefix"></span>.muacloud.vip
+            </div>
+
+        </div>
+
     </div>
 
     <div class="notice">
-        当前可用入口
+        请使用“当前年月”访问最新地址
+        <br>
+        每月域名前缀都会自动更新，请勿收藏旧链接
     </div>
 
     <div class="links" id="link-container">
@@ -169,6 +237,7 @@ body{
     </div>
 
     <div class="contact">
+
         <a href="https://t.me/muacloud_admina" target="_blank">
             Telegram：@muacloud_admina
         </a>
@@ -176,6 +245,7 @@ body{
         <a href="mailto:muacloud.cloud@gmail.com">
             邮箱：muacloud.cloud@gmail.com
         </a>
+
     </div>
 
     <div class="footer">
@@ -196,6 +266,12 @@ body{
         .padStart(2,'0');
 
     const prefix = year + month;
+
+    document.getElementById('current-date').innerText =
+        `${year}年${month}月`;
+
+    document.getElementById('example-prefix').innerText =
+        prefix;
 
     const baseDomains = [
         "muacloud.vip",
