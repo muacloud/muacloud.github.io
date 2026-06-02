@@ -1,37 +1,234 @@
-<html>
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
-<title>正在访问最新的域名</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muacloud 导航页</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+    overflow:hidden;
+
+    background: linear-gradient(-45deg,#0f172a,#1e293b,#0f766e,#1d4ed8);
+    background-size:400% 400%;
+    animation:bg 12s ease infinite;
+}
+
+@keyframes bg{
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+
+.card{
+    width:90%;
+    max-width:520px;
+
+    background:rgba(255,255,255,.12);
+    backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,.2);
+
+    border-radius:24px;
+
+    padding:40px 30px;
+
+    text-align:center;
+
+    box-shadow:
+        0 8px 32px rgba(0,0,0,.25);
+}
+
+.logo{
+    font-size:38px;
+    font-weight:700;
+    color:#fff;
+    margin-bottom:10px;
+}
+
+.desc{
+    color:rgba(255,255,255,.8);
+    font-size:15px;
+    line-height:1.7;
+    margin-bottom:30px;
+}
+
+.notice{
+    color:#ffd54f;
+    font-size:16px;
+    margin-bottom:25px;
+}
+
+.links{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.link{
+    text-decoration:none;
+
+    background:rgba(255,255,255,.15);
+
+    border:1px solid rgba(255,255,255,.15);
+
+    color:#fff;
+
+    padding:16px;
+
+    border-radius:14px;
+
+    font-size:20px;
+    font-weight:600;
+
+    transition:.25s;
+}
+
+.link:hover{
+    transform:translateY(-3px);
+    background:rgba(255,255,255,.25);
+    box-shadow:0 10px 25px rgba(0,0,0,.25);
+}
+
+.contact{
+    margin-top:35px;
+    padding-top:20px;
+    border-top:1px solid rgba(255,255,255,.15);
+}
+
+.contact a{
+    display:block;
+    margin-top:12px;
+
+    color:#cbd5e1;
+    text-decoration:none;
+
+    transition:.2s;
+}
+
+.contact a:hover{
+    color:#fff;
+}
+
+.footer{
+    margin-top:25px;
+    color:rgba(255,255,255,.5);
+    font-size:13px;
+}
+
+@media(max-width:600px){
+
+    .card{
+        padding:30px 20px;
+    }
+
+    .logo{
+        font-size:30px;
+    }
+
+    .link{
+        font-size:17px;
+        padding:14px;
+    }
+
+}
+</style>
 </head>
+
 <body>
-<form name=loading> 
-　<p align=center> <font color="#0066ff" size="2">gotoing, waiting</font><font color="#0066ff" size="2" face="Arial">...</font>
-　　<input type=text name=chart size=46 style="font-family:Arial; font-weight:bolder; color:#0066ff; background-color:#fef4d9; padding:0px; border-style:none;"> 
-　　
-　　<input type=text name=percent size=47 style="color:#0066ff; text-align:center; border-width:medium; border-style:none;"> 
-　　<script>　 
-var bar=0　 
-var line="||"　 
-var amount="||"　 
-count()　 
-function count(){　 
-bar=bar+2　 
-amount =amount + line　 
-document.loading.chart.value=amount　 
-document.loading.percent.value=bar+"%"　 
-if (bar<99)　 
-{setTimeout("count()",100);}　 
-else　 
-{window.location = "https://gdmn2.top";}　 
-}</script> 
-　</p> 
-</form> 
-  <div style="text-align: center;">
-    <p align="center">如果依然无法访问请挂代理<br> <br><a style="text-decoration: none" href="https://gdmn2.top/"><font color="#FF0000">手动跳转</font></a>.</p>
-  <a style="text-decoration: none" href="https://t.me/muacloud_admina"><font color="#0000FF">联系TG @muacloud_admina</font></a>.</p>
-  <a style="text-decoration: none" href="https://t.me/muacloud_bot"><font color="#0000FF">联系邮箱：muacloud.cloud@gmail.com</font></a>.
+
+<div class="card">
+
+    <div class="logo">
+        Muacloud
+    </div>
+
+    <div class="desc">
+        欢迎访问 Muacloud 导航页<br>
+        请根据当前年月访问最新地址
+    </div>
+
+    <div class="notice">
+        当前可用入口
+    </div>
+
+    <div class="links" id="link-container">
+        正在加载最新地址...
+    </div>
+
+    <div class="contact">
+        <a href="https://t.me/muacloud_admina" target="_blank">
+            Telegram：@muacloud_admina
+        </a>
+
+        <a href="mailto:muacloud.cloud@gmail.com">
+            邮箱：muacloud.cloud@gmail.com
+        </a>
+    </div>
+
+    <div class="footer">
+        © 2026 Muacloud
+    </div>
+
 </div>
 
+<script>
+(function() {
+
+    const now = new Date();
+
+    const year = now.getFullYear().toString().slice(-2);
+
+    const month = (now.getMonth() + 1)
+        .toString()
+        .padStart(2,'0');
+
+    const prefix = year + month;
+
+    const baseDomains = [
+        "muacloud.vip",
+        "gdmn3.xyz",
+        "muacloud.xyz",
+        "gdmn1.xyz"
+    ];
+
+    const container = document.getElementById('link-container');
+
+    container.innerHTML = '';
+
+    baseDomains.forEach(domain => {
+
+        const fullUrl = `https://${prefix}.${domain}`;
+
+        const a = document.createElement('a');
+
+        a.href = fullUrl;
+
+        a.className = 'link';
+
+        a.target = '_blank';
+
+        a.innerText = `${prefix}.${domain}`;
+
+        container.appendChild(a);
+
+    });
+
+})();
+</script>
 
 </body>
 </html>
+```
