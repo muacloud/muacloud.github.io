@@ -1,0 +1,55 @@
+name: Deploy Static Website
+
+on:
+  push:
+    branches:
+      - main  # 确保这和你仓库的主分支名称一致
+
+env:
+  # 强制使用 Node.js 24 以消除弃用警告
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 拉取仓库代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. 配置 AWS 凭证
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-east-1 # 如果你的 S3 不在弗吉尼亚，请修改此处区域
+
+      # 3. 同步并修正文件类型 (MIME Type)
+      - name: Sync to S3 and Fix Content-Type
+        run: |
+          # 第一步：基础同步（自动识别大部分类型）
+          aws s3 sync . s3://${{ secrets.AWS_S3_BUCKET }} --delete --exclude ".git/*" --exclude ".github/*"
+          
+          # 第二步：强制修正 HTML 类型（解决“变下载”或“乱码”问题）
+          aws s3 cp s3://${{ secrets.AWS_S3_BUCKET }} s3://${{ secrets.AWS_S3_BUCKET }} \
+            --recursive --exclude "*" --include "*.html" \
+            --metadata-directive REPLACE --content-type "text/html"
+            
+          # 第三步：强制修正 CSS 类型（确保样式加载）
+          aws s3 cp s3://${{ secrets.AWS_S3_BUCKET }} s3://${{ secrets.AWS_S3_BUCKET }} \
+            --recursive --exclude "*" --include "*.css" \
+            --metadata-directive REPLACE --content-type "text/css"
+
+          # 第四步：强制修正 JS 类型（确保脚本运行）
+          aws s3 cp s3://${{ secrets.AWS_S3_BUCKET }} s3://${{ secrets.AWS_S3_BUCKET }} \
+            --recursive --exclude "*" --include "*.js" \
+            --metadata-directive REPLACE --content-type "application/javascript"
+
+      # 4. 刷新 CloudFront 缓存 (Invalidation)
+      - name: Create CloudFront Invalidation
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
