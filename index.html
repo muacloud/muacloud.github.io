@@ -135,6 +135,15 @@ body{
     box-shadow:0 10px 25px rgba(0,0,0,.25);
 }
 
+/* 独立固定链接特殊样式（可选：加个醒目的渐变边框或底色以便区分） */
+.permanent-link {
+    background: rgba(59, 130, 246, 0.35) !important;
+    border: 1px solid rgba(96, 165, 250, 0.5) !important;
+}
+.permanent-link:hover {
+    background: rgba(59, 130, 246, 0.5) !important;
+}
+
 .contact{
     margin-top:35px;
     padding-top:20px;
@@ -274,16 +283,23 @@ body{
     document.getElementById('example-prefix').innerText =
         prefix;
 
+    const container = document.getElementById('link-container');
+    container.innerHTML = '';
+
+    // 1. 最上方单独显示的永久海外地址
+    const permanentA = document.createElement('a');
+    permanentA.href = "https://12o.ooo";
+    permanentA.className = 'link permanent-link';
+    permanentA.target = '_blank';
+    permanentA.innerText = "永久海外地址 (点击访问)";
+    container.appendChild(permanentA);
+
+    // 2. 下方自动生成的4个域名列表（第三个已替换为 gdmn.club）
     const baseDomains = [
-        "12o.ooo",
         "muacloud.vip",
-        "muacloud.xyz",
+        "gdmn.club",
         "4iox.com"
     ];
-
-    const container = document.getElementById('link-container');
-
-    container.innerHTML = '';
 
     baseDomains.forEach(domain => {
 
